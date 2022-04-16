@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+GLTriangleDemo triangleDemo;
+
 QtOpenGLWidget::QtOpenGLWidget(QWidget * parent /*= nullptr*/, Qt::WindowFlags f /*= Qt::WindowFlags()*/)
 	:QOpenGLWidget(parent, f)
 {
@@ -29,9 +31,12 @@ void QtOpenGLWidget::initializeGL()
 	{
 		std::cout << "OpenGL version: " << glGetString(GL_VERSION) << "\n";
 		std::cout << "OpenGL renderer: " << glGetString(GL_RENDERER) << "\n";
-		std::cout << "OpenGL vendor: " << glGetString(GL_VENDOR) << "\n";
 		std::cout << "GLEW version: " << glewGetString(GLEW_VERSION) << "\n";
 	}
+
+	// tell GL to only draw onto a pixel if the shape is closer to the viewer
+	glEnable(GL_DEPTH_TEST); // enable depth-testing
+	glDepthFunc(GL_LESS); // depth-testing interprets a smaller value as "closer"
 }
 
 void QtOpenGLWidget::resizeGL(int w, int h)
@@ -46,5 +51,5 @@ void QtOpenGLWidget::paintGL()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	drawTriangleDemo();
+	triangleDemo.render();
 }
